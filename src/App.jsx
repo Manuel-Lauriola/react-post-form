@@ -1,12 +1,13 @@
 import { useState } from "react"
+import axios from "axios"
 
 function App() {
 
   const [ formData, setFormData ] = useState({
     title: "",
     author: "",
-    post: "",
-    isPublic: false
+    body: "",
+    public: false
   })
 
   function handleFormData(e) {
@@ -19,12 +20,19 @@ function App() {
     }))
   }
 
+  function handleSubmit(e) {
+    e.preventDefault()
+    axios.post("https://67c5b4f3351c081993fb1ab6.mockapi.io/api/posts", formData).then((resp) => {
+      console.log(`post inviato`+ resp.data)
+    })
+  }
+
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="row gy-4 my-5">
                 <div className="col-4">
                   <input type="text"
@@ -45,21 +53,27 @@ function App() {
                 <div className="col-4">
                   <div className="form-check">
                     <input type="checkbox"
-                    name="isPublic"
-                    id="isPublic"
-                    checked={formData.isPublic}
+                    name="public"
+                    id="public"
+                    checked={formData.public}
                     onChange={handleFormData}
-                    className="isPublic form-check-input" />
-                    <label htmlFor="isPublic" className="form-check-label">Pubblico</label>
+                    className="public form-check-input" />
+                    <label htmlFor="public" className="form-check-label">Pubblico</label>
                   </div>
                 </div>
                 <div className="col-12">
-                  <input type="text"
-                    name="post"
-                    value={formData.post}
+                  <textarea
+                    name="body"
+                    value={formData.body}
                     onChange={handleFormData}
                     placeholder="scrivi il tuo post"
-                    className="form-control post" />
+                    className="form-control post"
+                    rows={10} />
+                </div>
+                <div className="col-12 d-flex justify-content-end">
+                  <button type="submit" className="btn btn-primary">
+                    Invia Post
+                  </button>
                 </div>
               </div>
             </form>
